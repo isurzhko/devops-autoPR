@@ -1,5 +1,5 @@
 {
-  "id": "183b2bf4-9158-4a20-ad47-ecc12e6e2f8b",
+  "id": "1b1d7a62-a61a-4f9b-b427-a63128134573",
   "name": "PullRequestAutomation",
   "friendlyName": "Pull Request Automation",
   "description": "Creates Pull Request from core to forked repo with autocomplete",
@@ -12,7 +12,7 @@
   "author": "Igor Surzhko",
   "version": {
     "Major": 1,
-    "Minor": 1,
+    "Minor": 0,
     "Patch": 0
   },
   "demands": [],
@@ -316,7 +316,7 @@
   ],
   "execution": {
     "PowerShell3": {
-      "target": "$(currentDirectory)\\functions-forkPR.ps1",
+      "target": "$(currentDirectory)\\pullRequestForks.ps1",
       "argumentFormat": "",
       "workingDirectory": "$(currentDirectory)"
     }

@@ -9,7 +9,7 @@ Helper mode works if you use devops service connection with type "Azure Repos/Te
 
 
 ### Learn More
-The [source](https://eshopworld.visualstudio.com/evo-core/_git/devops-vstsautopr) to this extension is available. Feel free to take, fork, and extend.
+The [source](https://github.com/isurzhko/devops-autoPR) to this extension is available. Feel free to take, fork, and extend.
 
   ### Quick steps to get started ###
  

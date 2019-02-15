@@ -1,7 +1,7 @@
 {
   "manifestVersion": 1,
   "id": "forkedrepoprautocomplete",
-  "version": "1.1.0",
+  "version": "1.0.0",
   "name": "Pull Request Automation",
   "scopes": [],
   "description": "Creates Pull Request from core to forked repo with autocomplete",
@@ -41,12 +41,12 @@
   },
   "links": {
     "home": {
-      "uri": "https://eshopworld.visualstudio.com/evo-core/_git/devops-vsts-autoPR"
+      "uri": "https://github.com/isurzhko/devops-autoPR"
     }
   },
   "repository": {
     "type": "git",
-    "uri": "https://eshopworld.visualstudio.com/evo-core/_git/devops-vsts-autoPR"
+    "uri": "https://github.com/isurzhko/devops-autoPR"
   },
   "branding": {
     "color": "rgb(254, 231, 234)",
@@ -63,7 +63,7 @@
   ],
   "contributions": [
     {
-      "id": "183b2bf4-9158-4a20-ad47-ecc12e6e2f8b",
+      "id": "1b1d7a62-a61a-4f9b-b427-a63128134573",
       "type": "ms.vss-distributed-task.task",
       "targets": [
         "ms.vss-distributed-task.tasks"
