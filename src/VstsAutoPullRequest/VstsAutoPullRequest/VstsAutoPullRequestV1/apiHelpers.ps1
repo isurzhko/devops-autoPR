@@ -368,7 +368,6 @@ Function Add-WorkItemsToPR {
 Function Set-PullRequestAutocomplete {
     param (
         [Parameter(Mandatory=$true)][PSCustomObject] $requestObject,
-        [Parameter(Mandatory=$true)][PSCustomObject] $sourceRepo,
         [Parameter(Mandatory=$true)][PSCustomObject] $targetRepo,
         [Parameter(Mandatory=$true)][PSCustomObject] $pullRequest
     )
@@ -425,6 +424,23 @@ Function Set-PullRequestAutocomplete {
     }
 }
 
+###########################################################
+#       Get Pull Request Status
+###########################################################
+Function Get-PullRequestStatus {
+    param (
+        [Parameter(Mandatory=$true)][PSCustomObject] $requestObject,
+        [Parameter(Mandatory=$true)][PSCustomObject] $targetRepo,
+        [Parameter(Mandatory=$true)][PSCustomObject] $pullRequest
+    )
+    $pullRequestGetUrl = ($requestObject.apisInstance + "git/repositories/$($targetRepo.Id)/pullRequests/" + $pullRequest.Id + "?api-version=$($requestObject.APIVersion)")
+    $Response = Invoke-RestMethod -Uri $pullRequestGetUrl `
+        -Method GET `
+        -ContentType "application/json" `
+        -Headers $requestObject.headers 
+    $status = $Response.mergeStatus.toLower()
+    return $status
+}
 
 ###########################################################
 #       New pull request with all options
@@ -453,15 +469,10 @@ Function New-PullRequest {
 
         if ($true -eq $isautocomplete) {
             # Set PR to auto-complete
-            Set-PullRequestAutocomplete -requestObject $requestObject -sourceRepo $sourceRepo -targetRepo $targetRepo -pullRequest $pullRequest
+            Set-PullRequestAutocomplete -requestObject $requestObject -targetRepo $targetRepo -pullRequest $pullRequest
         } #if autocomplete
         else {  # no need autocomplete
-            $pullRequestGetUrl = ($requestObject.apisInstance + "git/repositories/$($targetRepo.Id)/pullRequests/" + $pullRequest.Id + "?api-version=$($requestObject.APIVersion)")
-            $Response = Invoke-RestMethod -Uri $pullRequestGetUrl `
-                -Method GET `
-                -ContentType "application/json" `
-                -Headers $requestObject.headers 
-            $status = $Response.mergeStatus.toLower()
+            $status = Get-PullRequestStatus -requestObject $requestObject -targetRepo $targetRepo -pullRequest $pullRequest
             Write-Output "Current pull request status is $status. Autocomplete disabled."
         }    
     }
