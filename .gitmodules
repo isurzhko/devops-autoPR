@@ -1,0 +1,3 @@
+[submodule "src/azure-pipelines-tasks"]
+	path = src/azure-pipelines-tasks
+	url = https://github.com/Microsoft/azure-pipelines-tasks.git

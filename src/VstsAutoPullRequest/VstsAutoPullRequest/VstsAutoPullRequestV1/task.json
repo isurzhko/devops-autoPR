@@ -1,0 +1,328 @@
+{
+  "id": "183b2bf4-9158-4a20-ad47-ecc12e6e2f8b",
+  "name": "PullRequestAutomation",
+  "friendlyName": "Pull Request Automation",
+  "description": "Creates Pull Request from core to forked repo with autocomplete",
+  "helpMarkDown": "[More Information](https://eshopworld.visualstudio.com/evo-core/_git/devops-vsts-autoPR?path=%2FREADME.md)",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Igor Surzhko",
+  "version": {
+    "Major": 1,
+    "Minor": 1,
+    "Patch": 0
+  },
+  "demands": [],
+  "groups": [
+    {
+      "name": "auth",
+      "displayName": "Authentication",
+      "isExpanded": true
+    },
+    {
+      "name": "deployment",
+      "displayName": "Deployment",
+      "isExpanded": true
+    },
+    {
+      "name": "autocomplete",
+      "displayName": "Autocomplete options",
+      "isExpanded": true
+    },
+    {
+      "name": "advanced",
+      "displayName": "Advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "connectionmethod",
+      "type": "radio",
+      "label": "Rest API authentication",
+      "groupName": "auth",
+      "required": false,
+      "defaultValue": "oauth",
+      "options": {
+        "pat": "PAT Token",
+        "oauth": "OAuth (enable <Allow scripts to access the OAuth token>)"
+      },
+      "helpMarkDown": "Choose authentication method for rest api calls"
+    },
+    {
+      "name": "pattoken",
+      "type": "string",
+      "label": "PAT Token",
+      "groupName": "auth",
+      "defaultValue": "<some token or secret variable>",
+      "required": true,
+      "visibleRule": "connectionmethod == pat",
+      "helpMarkDown": "PAT Token. Just create secret variable in build/release and use it here"
+    },
+    {
+      "name": "useconnectionhelper",
+      "type": "boolean",
+      "label": "Use connection helper",
+      "groupName": "auth",
+      "required": false,
+      "defaultValue": "true",
+      "helpMarkdown": "If true, you will be able to select VSTS connection and collection name. If false, helper won`t work and you`ll need to fill all fields manually"
+    },
+    {
+      "name": "connection",
+      "type": "connectedService:Externaltfs",
+      "groupName": "auth",
+      "visibleRule": "useconnectionhelper == true",      
+      "label": "VSTS Service Connection (helper for filling task fields)",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "VSTS service connection. You can add it in https://<instance>.visualstudio.com/DefaultCollection/<project>/_settings/adminservices with type \"Azure Repos/Team Foundation Server\". Use this connection if you want helper for filling task fields. Therwise you will need to fill all fields manually"
+    },
+    {
+      "name": "collectionid",
+      "type": "picklist",
+      "groupName": "auth",
+      "label": "Collection",
+      "visibleRule": "useconnectionhelper == true",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "This field need to be filled by collection name if you want to get forked repositories automatically"
+    },
+    {
+      "name": "sourceproject",
+      "type": "pickList",
+      "label": "Source project",
+      "defaultValue": "",
+      "groupName": "deployment",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "VSTS project name"
+    },
+    {
+      "name": "sourcerepository",
+      "type": "pickList",
+      "label": "Source repository",
+      "defaultValue": "",
+      "groupName": "deployment",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "Source repository name"
+    },
+    {
+      "name": "sourcerefname",
+      "type": "pickList",
+      "label": "Source branch name",
+      "defaultValue": "refs/heads/master",
+      "groupName": "deployment",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "Source branch name"
+    },
+    {
+      "name": "ismultitargets",
+      "type": "boolean",
+      "label": "Allow multiselect of target repos",
+      "groupName": "deployment",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkdown": "If true, you will be able to mutliselect target repos"
+    },
+    {
+      "name": "useallforks",
+      "type": "boolean",
+      "label": "Pull requests to all forked repositories",
+      "groupName": "deployment",
+      "visibleRule": "ismultitargets == true",
+      "required": false,
+      "defaultValue": "false",
+      "helpMarkdown": "If false, you will be able to mutliselect target repos. If true, all forked repos will be used"
+    },
+    {
+      "name": "targetrepositoriesmulti",
+      "type": "pickList",
+      "label": "Target repositories",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "deployment",
+      "visibleRule": "useallforks == false",
+      "properties": {
+        "EditableOptions": "True",
+        "MultiSelectFlatList": "true"
+      },
+      "helpMarkdown": "Forked repositories ID`s in format <repo1,repo2> etc. You shouldn`t use repositories names here"
+    },
+    {
+      "name": "targetrepository",
+      "type": "pickList",
+      "label": "Target repository",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "deployment",
+      "visibleRule": "ismultitargets == false",
+      "properties": {
+        "EditableOptions": "True",
+        "MultiSelectFlatList": "false"
+      },
+      "helpMarkdown": "Forked repository name"
+    },
+    {
+      "name": "targetrefnamemulti",
+      "type": "string",
+      "label": "Target branch name",
+      "defaultValue": "refs/heads/master",
+      "groupName": "deployment",
+      "visibleRule": "ismultitargets == true",
+      "required": true,
+      "properties": {
+        "EditableOptions": "true"
+      },
+      "helpMarkdown": "Forked repositories branch name"
+    },
+    {
+      "name": "targetrefname",
+      "type": "pickList",
+      "label": "Target branch name",
+      "defaultValue": "refs/heads/master",
+      "groupName": "deployment",
+      "visibleRule": "ismultitargets == false",
+      "required": true,
+      "properties": {
+        "EditableOptions": "false"
+      },
+      "helpMarkdown": "Forked repository branch name"
+    },
+    {
+      "name": "isautocomplete",
+      "type": "boolean",
+      "label": "Set pull requests to autocomplete",
+      "groupName": "autocomplete",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkdown": "If true, pull requests will set to autocomplete state"
+    },
+    {
+      "name": "issquashmerge",
+      "type": "boolean",
+      "label": "Set autocomplete to squash merge",
+      "groupName": "autocomplete",
+      "visibleRule": "isautocomplete == true",
+      "required": false,
+      "defaultValue": "false",
+      "helpMarkdown": "If true, autocomplete will merge all source commits into one"
+    },
+    {
+      "name": "ApiVersion",
+      "type": "pickList",
+      "label": "API Version",
+      "groupName": "advanced",
+      "defaultValue": "5.1-preview",
+      "options": {
+        "5.1-preview": "5.1-preview",
+        "5.0-preview": "5.0-preview"
+      },
+      "required": true,
+      "helpMarkDown": "VSTS API version"
+    },
+    {
+      "name": "exceptiononerror",
+      "type": "radio",
+      "label": "Throw script on pull request error",
+      "groupName": "advanced",
+      "required": false,
+      "defaultValue": "continue",
+      "options": {
+        "break": "Throw on exception",
+        "continue": "Continue on exception with error message"
+      },
+      "helpMarkDown": "Throw script on pull request error"
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "sourceproject",
+      "endpointId": "$(connection)",
+      "dataSourceName": "Projects",
+      "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+    },
+    {
+      "target": "collectionid",
+      "endpointId": "$(connection)",
+      "endpointUrl": "{{endpoint.url}}/_api/_common/GetJumpList?showTeamsOnly=false&__v=5&navigationContextPackage={}&showStoppedCollections=false",
+      "resultSelector": "jsonpath:$.__wrappedArray[*]",
+      "resultTemplate": "{ \"Value\" : \"{{{collectionId}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+    },
+    {
+      "target": "sourcerepository",
+      "endpointId": "$(connection)",
+      "endpointUrl": "{{endpoint.url}}/$(sourceproject)/_apis/git/repositories?api-version=5.1-preview",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }",
+      "parameters": {
+        "sourceproject": "$(sourceproject)"
+      }
+    },
+    {
+      "target": "sourcerefname",
+      "endpointId": "$(connection)",
+      "endpointUrl": "{{endpoint.url}}/$(sourceproject)/_apis/git/repositories/$(sourcerepository)/refs?api-version=5.1-preview",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }",
+      "parameters": {
+        "sourceproject": "$(sourceproject)",
+        "sourcerepository": "$(sourcerepository)"
+      }
+    },
+    {
+      "target": "targetrepository",
+      "endpointId": "$(connection)",
+      "endpointUrl": "{{endpoint.url}}/$(sourceproject)/_apis/git/repositories/$(sourcerepository)/forks/$(collectionid)?api-version=5.1-preview",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}} ({{{project.name}}})\" }",
+      "parameters": {
+        "sourceproject": "$(sourceproject)",
+        "sourcerepository": "$(sourcerepository)"
+      }
+    },
+    {
+      "target": "targetrepositoriesmulti",
+      "endpointId": "$(connection)",
+      "endpointUrl": "{{endpoint.url}}/$(sourceproject)/_apis/git/repositories/$(sourcerepository)/forks/$(collectionid)?api-version=5.1-preview",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}} ({{{project.name}}})\" }",
+      "parameters": {
+        "sourceproject": "$(sourceproject)",
+        "sourcerepository": "$(sourcerepository)"
+      }
+    },
+    {
+      "target": "targetrefname",
+      "endpointId": "$(connection)",
+      "endpointUrl": "{{endpoint.url}}/_apis/git/repositories/$(targetrepository)/refs?api-version=5.1-preview",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }",
+      "parameters": {
+        "targetrepository": "$(targetrepository)"
+      }
+    }
+  ],
+  "execution": {
+    "PowerShell3": {
+      "target": "$(currentDirectory)\\functions-forkPR.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  },
+  "instanceNameFormat": "Pull Request Automation from $(sourceproject):$(sourcerepository)/$(sourcerefname) to forked repos ",
+  "messages": {
+    "PS_ExitCode": "PowerShell exited with code '{0}'."
+  }
+}

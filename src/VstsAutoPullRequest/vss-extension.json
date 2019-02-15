@@ -1,0 +1,76 @@
+{
+  "manifestVersion": 1,
+  "id": "forkedrepoprautocomplete",
+  "version": "1.1.0",
+  "name": "Pull Request Automation",
+  "scopes": [],
+  "description": "Creates Pull Request from core to forked repo with autocomplete",
+  "publisher": "eshopworld-devops",
+  "public": false,
+  "icons": {
+    "default": "static/images/icon.png"
+  },
+  "targets": [
+    {
+      "id": "Microsoft.VisualStudio.Services"
+    }
+  ],
+  "demands": [
+    "api-version/3.0"
+  ],
+  "tags": [
+    "Pull Request",
+    "Autocomplete"
+  ],
+  "categories": [
+    "Azure Pipelines"
+  ],
+  "screenshots": [
+    {
+      "path": "VstsAutoPullRequest/static/images/capture.png",
+      "path": "VstsAutoPullRequest/static/images/capture2.png"
+    }
+  ],
+  "content": {
+    "license": {
+      "path": "license.md"
+    },
+    "details": {
+      "path": "overview.md"
+    }
+  },
+  "links": {
+    "home": {
+      "uri": "https://eshopworld.visualstudio.com/evo-core/_git/devops-vsts-autoPR"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "uri": "https://eshopworld.visualstudio.com/evo-core/_git/devops-vsts-autoPR"
+  },
+  "branding": {
+    "color": "rgb(254, 231, 234)",
+    "theme": "light"
+  },
+  "files": [
+    {
+      "path": "VstsAutoPullRequest"
+    },
+    {
+      "path": "ps_modules",
+      "packagePath": "VstsAutoPullRequest/VstsAutoPullRequest/VstsAutoPullRequestV1/ps_modules"
+    }
+  ],
+  "contributions": [
+    {
+      "id": "183b2bf4-9158-4a20-ad47-ecc12e6e2f8b",
+      "type": "ms.vss-distributed-task.task",
+      "targets": [
+        "ms.vss-distributed-task.tasks"
+      ],
+      "properties": {
+        "name": "VstsAutoPullRequest/VstsAutoPullRequest"
+      }
+    }
+  ]
+}
